@@ -1,35 +1,38 @@
 let $hiddenItems = $();
 let activeFn = () => {};
+let active = false;
+let selector;
+let loaded = false;
+
+checkUrl();
 
 chrome.runtime.sendMessage({
   active: '?'
-}, ({ active }) => {
-  if (url.match(/iltasanomat/)) {
-    check($('a'), active);
-  } else if (url.match(/iltalehti/)) {
-    check($('.df-article, .df-container'), active);
+}, (request) => {
+  active = request.active;
 
-    activeFn = () => {
-      var script = document.createElement('script');
-      script.appendChild(document.createTextNode('ILlazyImageHandler.recalculate();'));
-      (document.body || document.head).appendChild(script);
-      document.body.scrollTop++;
-    };
-  } else if (url.match(/hs/)) {
-    check($('.articlegroup__article-hs46, .module li'), active);
-    $hiddenItems = $hiddenItems.add($('#breaking-news-block'));
-  }
+  let timer = setInterval(() => {
+    if (active) {
+      checkElements($(selector));
+      $hiddenItems.hide();
+    }
+  }, 500);
 
-  if (active) {
-    $hiddenItems.hide();
-    activeFn();
-  }
+  $(() => {
+    loaded = true;
+    clearInterval(timer);
+    checkElements($(selector));
+
+    if (active) {
+      $hiddenItems.hide();
+      activeFn();
+    }
+  });
 });
 
-var url = window.location.toString();
-
-chrome.runtime.onMessage.addListener(function (request) {
+chrome.runtime.onMessage.addListener((request) => {
   if ('active' in request) {
+    active = request.active;
     if (request.active) {
       $hiddenItems.hide();
       activeFn();
@@ -39,12 +42,31 @@ chrome.runtime.onMessage.addListener(function (request) {
   }
 });
 
-function check(selector) {
-  selector.each(function () {
-    var $element = $(this);
-    var html = $element.html();
+function checkElements(selector) {
+  selector.each((i, element) => {
+    let $element = $(element);
+    let html = $element.html();
     if (html.match(/vero|tulo|mätky|tiena/)) {
       $hiddenItems = $hiddenItems.add($element);
     }
   });
+}
+
+function checkUrl() {
+  let url = window.location.toString();
+
+  if (url.match(/iltasanomat/)) {
+    selector = 'a';
+  } else if (url.match(/iltalehti/)) {
+    selector = '.df-article, .df-container';
+    activeFn = () => {
+      var script = document.createElement('script');
+      script.appendChild(document.createTextNode('ILlazyImageHandler.recalculate();'));
+      (document.body || document.head).appendChild(script);
+      document.body.scrollTop++;
+    };
+  } else if (url.match(/hs/)) {
+    selector = '.articlegroup__article-hs46, .module li';
+    $hiddenItems = $hiddenItems.add($('#breaking-news-block'));
+  }
 }
