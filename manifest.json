@@ -3,7 +3,7 @@
 
   "name": "Zerotiedot",
   "version": "0.1.0",
-  "description": "Poistaa vero-uutiset",
+  "description": "Piilota iltapäivälehdistä kaikki verotietoihin tai tuloihin liittyvät uutiset. Lähdekoodi: https://github.com/sysart/zerotiedot",
   "author": "Sysart",
 
   "icons": {
