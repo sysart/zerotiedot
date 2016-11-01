@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+
+  "name": "Zerotiedot",
+  "version": "0.1.0",
+  "description": "Poistaa vero-uutiset",
+  "author": "Sysart",
+
+  "icons": {
+    "16": "images/verotiedot_oranssi_16.png",
+    "48": "images/verotiedot_oranssi_48.png",
+    "128": "images/verotiedot_oranssi.png"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "images/verotiedot_16.png",
+      "48": "images/verotiedot_48.png",
+      "128": "images/verotiedot.png"
+    }
+  },
+
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "js": [
+        "vendor/jquery-3.1.1.min.js",
+        "script.js"
+      ],
+      "matches": [
+        "http://www.iltasanomat.fi/*",
+        "http://www.iltalehti.fi/*",
+        "http://www.hs.fi/*"
+      ]
+    }
+  ]
+}
