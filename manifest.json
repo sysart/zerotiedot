@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Zerotiedot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Piilota iltapäivälehdistä kaikki verotietoihin tai tuloihin liittyvät uutiset. Lähdekoodi: https://github.com/sysart/zerotiedot",
   "author": "Sysart",
 
